@@ -4,7 +4,10 @@ var octSteps=[{dx: -1, dy: -1}, {dx: 0, dy: -1}, {dx: 1, dy: -1}, {dx: 1, dy: 0}
 var start = [{x:-1, y:-1}, {x:-1, y:-1}], end = [{x:-1, y:-1}, {x:-1, y:-1}],grid = 8;
 var padding = 16, s, density=0.5, count=2;
 var t0, t1, t2;
+var interval1 = 0;
+var interval2 = 0;
 var flagA = false, flagB= false, flagErr = false, flagRet = false;
+var act = true;
 
 function PriorityQueue()
 {
@@ -296,7 +299,8 @@ function solveMaze1Optimized(index) {
         }
         drawMaze(index);
         t1 = window.performance.now();
-        document.getElementById("footer1").innerHTML += "<br/>Execution time: " + ((t1 - t0) / 1000) + "s";
+        interval1 += (t1 - t0);
+        document.getElementById("footer1").innerHTML += "<br/>Execution time: " + (interval1 / 1000) + "s";
         flagA = true;
         if (flagA && flagB) {
             document.getElementById("btnClear").removeAttribute("disabled");
@@ -319,9 +323,11 @@ function solveMaze1Optimized(index) {
     drawMaze(index);
     
 
-    requestAnimationFrame( function() {
-        solveMaze1Optimized(index);
-    } );
+    if (act) {
+        requestAnimationFrame( function() {
+            solveMaze1Optimized(index);
+        } );
+    }
 }
 
 function solveMaze1AStar (index) {
@@ -341,7 +347,8 @@ function solveMaze1AStar (index) {
         }
         drawMaze(index);
         t2 = window.performance.now();
-        document.getElementById("footer2").innerHTML += "<br/>Execution time: " + ((t2 - t0) / 1000) + "s";
+        interval2 += (t2 - t0);
+        document.getElementById("footer2").innerHTML += "<br/>Execution time: " + (interval2 / 1000) + "s";
         flagB = true;
         if (flagA && flagB) {
             document.getElementById("btnClear").removeAttribute("disabled");
@@ -368,10 +375,11 @@ function solveMaze1AStar (index) {
 
     drawMaze(index);
     
-
-    requestAnimationFrame( function() {
-        solveMaze1AStar(index);
-    } );
+    if (act) {
+        requestAnimationFrame( function() {
+            solveMaze1AStar(index);
+        } );
+    }
 }
 
 function solveMaze2(index) {
@@ -536,10 +544,15 @@ function getCursorPos( event ) {
         mazes[1][end[1].x][end[1].y] = 8;
 
         document.getElementById("btnClear").setAttribute("disabled", "disabled");
+        document.getElementById("btnAct").removeAttribute("disabled");
+
         flagA = false;
         flagB = false;
         flagErr = false;
         flagRet = false;
+
+        interval1 = 0;
+        interval2 = 0;
 
         if(document.getElementById("sltType").value == "Maze1") {
             
@@ -780,6 +793,10 @@ function onCreate() {
 
     document.getElementById("btnCreateMaze").setAttribute("disabled", "disabled");
     document.getElementById("btnClear").setAttribute("disabled", "disabled");
+    document.getElementById("btnAct").innerHTML = "Pause";
+    document.getElementById("btnAct").setAttribute("disabled", "disabled");
+
+    act = true;
 
     wid = document.getElementById("maze1").offsetWidth - padding; 
     hei = 400;
@@ -881,7 +898,39 @@ function onClear() {
     end[0].x = end[0].y = -1;
     end[0].x = end[0].y = -1;
 
+    document.getElementById("btnAct").innerHTML = "Pause";
+    document.getElementById("btnAct").setAttribute("disabled", "disabled");
     document.getElementById("footer1").innerHTML = "DFS Algorithm";
     document.getElementById("footer2").innerHTML = "A* Algorithm";
 
+    act = true;
+
+}
+
+function changeStatus() {
+    var s = document.getElementById("btnAct").innerHTML;
+    if (s == "Pause") {
+
+        t1 = window.performance.now();
+        t2 = window.performance.now();
+        interval1 += (t1 - t0);
+        interval2 += (t2 - t0);
+
+        document.getElementById("btnAct").innerHTML = "Continue";
+        document.getElementById("btnClear").removeAttribute("disabled");
+
+        act = false;
+        
+    } else {
+        t0 = window.performance.now();
+
+        document.getElementById("btnAct").innerHTML = "Pause";
+        document.getElementById("btnClear").setAttribute("disabled", "disabled");
+
+        act = true;
+
+        solveMaze1Optimized(0);
+        solveMaze1AStar(1);
+    }
+    
 }

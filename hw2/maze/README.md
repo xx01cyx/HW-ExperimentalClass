@@ -4,7 +4,6 @@ To Do List
 - [x] Fix "Clear" bug (disable the clear function when solving the maze)
 - [x] Alert when the maze is unsolvable
 - [x] Calculate and display the excecution time
-- [ ] Add a pause function
-
+- [x] Add a pause function
 
 
