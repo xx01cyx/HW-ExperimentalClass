@@ -298,12 +298,15 @@ function solveMaze1Optimized(index) {
             }
         }
         drawMaze(index);
-        t1 = window.performance.now();
-        interval1 += (t1 - t0);
-        document.getElementById("footer1").innerHTML += "<br/>Execution time: " + (interval1 / 1000) + "s";
-        flagA = true;
+        if (!flagA) {
+            t1 = window.performance.now();
+            interval1 += (t1 - t0);
+            document.getElementById("footer1").innerHTML += "<br/>Execution time: " + (interval1 / 1000) + "s";
+            flagA = true;
+        }
         if (flagA && flagB) {
             document.getElementById("btnClear").removeAttribute("disabled");
+            document.getElementById("btnAct").setAttribute("disabled", "disabled");
         }
         return;
     }
@@ -346,12 +349,15 @@ function solveMaze1AStar (index) {
             }
         }
         drawMaze(index);
-        t2 = window.performance.now();
-        interval2 += (t2 - t0);
-        document.getElementById("footer2").innerHTML += "<br/>Execution time: " + (interval2 / 1000) + "s";
-        flagB = true;
+        if (!flagB) {
+            t2 = window.performance.now();
+            interval2 += (t2 - t0);
+            document.getElementById("footer2").innerHTML += "<br/>Execution time: " + (interval2 / 1000) + "s";
+            flagB = true;
+        }
         if (flagA && flagB) {
             document.getElementById("btnClear").removeAttribute("disabled");
+            document.getElementById("btnAct").setAttribute("disabled", "disabled");
         }
         return;
     }
@@ -426,6 +432,7 @@ function solveMaze2Optimized(index) {
             flagA = true;
             if (flagA && flagB) {
                 document.getElementById("btnClear").removeAttribute("disabled");
+                document.getElementById("btnAct").setAttribute("disabled", "disabled");
             }
             flagRet = true;
             return;
@@ -480,6 +487,7 @@ function solveMaze2AStar (index) {
         flagB = true;
         if (flagA && flagB) {
             document.getElementById("btnClear").removeAttribute("disabled");
+            document.getElementById("btnAct").setAttribute("disabled", "disabled");
         }
         return;
     }
@@ -711,7 +719,7 @@ function createMaze2(ctx) {
     var r = Math.random();
 
     mazes[0][start[0].x][start[0].y] = r < density ? 0 : 1;
-    mazes[1][start[0].x][start[0].y] = r < density ? 0 : 1;
+    mazes[1][start[1].x][start[1].y] = r < density ? 0 : 1;
     
     drawMaze(0);
     drawMaze(1);
@@ -769,7 +777,7 @@ function createCanvas(count) {
         canvas.id = "canvas" + (i + 1);
         ctxs[i] = canvas.getContext( "2d" );
         ctxs[i].fillStyle = "gray"; 
-        var div = document.getElementById("maze" + (i + 1))
+        var div = document.getElementById("maze" + (i + 1));
         div.appendChild( canvas );    
     }
     
@@ -850,7 +858,8 @@ function onCreate() {
         start[0].x = 0;
 
         if(document.getElementById("chkAnimated").checked) {
-
+            start[0] = { x: 0, y: 0 };
+            start[1] = { x: 0, y: 0 };
             createMaze2();
         }
         else {
@@ -860,12 +869,23 @@ function onCreate() {
     }
 }
 
+function setEmptyCanvas(count) {
+    for (var i = 0; i < count; i++) {
+        var div = document.getElementById("maze" + (i + 1));
+        if (div.childNodes) 
+            div.removeChild(div.childNodes[0]);
+    }
+    createCanvas(count);
+}
+
 function onSltType() {
     if(document.getElementById("sltType").value == "Maze2") {
         document.getElementById("density").removeAttribute("disabled");
+        setEmptyCanvas(count);
     }
     else {
         document.getElementById("density").setAttribute("disabled", "disabled");
+        setEmptyCanvas(count);
     }
 }
 
