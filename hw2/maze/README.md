@@ -7,7 +7,7 @@ Therefore, in my code, I try to
 2. Add some new functions 
 3. Improve the UI
    
-**So [HERE](https://xx01cyx.github.io/Maze/) comes the maze game.** Click `How to play` button at the upper right corner of the page to get some instructions for the game. (Up till now, you may explore the webpage by yourself without a guide, since I haven't finished document writing...)<br/>
+**So [HERE](https://xx01cyx.github.io/Maze/) comes the maze game.** Click `How to play` button at the upper right corner of the page to get some instructions for the game. <br/><br/>
 Enjoy your time!
 
 To Do List
@@ -22,7 +22,7 @@ To Do List
 - [x] Enable selection of start point & end point in the 2nd canvas
 - [x] Skip the animation of maze creating
 - [x] Rewrite `maze.html`, using Bootstrap as CSS framework instead of Spectre
-- [ ] Add instructions for the game
+- [x] Add instructions for the game
 
 Notes
 =====
